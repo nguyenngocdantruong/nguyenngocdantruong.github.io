@@ -1,4 +1,20 @@
 {
+    "nguyentruongg023@gmail.com 28/02/2026":{
+        "secret" : "SV6IDUETL7S4TUWSL2SQEX4FS6VTUG6H",
+        "type" : "totp",
+        "username": "nguyentruongg023@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
+    "mogden87@gkorean.com 28/02/2026":{
+        "secret" : "BCRLDD6EED3S6W5S3BGMYP7DL7LBT5GL",
+        "type" : "totp",
+        "username": "mogden87@gkorean.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
     "maiyeulhas@gmail.com":{
         "secret" : "3U32IQGIXX6FG23BKAU3X4M4SPURR6ZS",
         "type" : "totp",
