@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Encryption/Decryption</title>
+    <link rel="icon" type="image/png" href="clown.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        label {
+            display: block;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #ffffff;
+            color: #2c3e50;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2980b9;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .output-box {
+            background: #f8f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #2c3e50;
+        }
+
+        .success {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: #27ae60;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background: #219a52;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .key-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .key-section.show {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            background: #f5f7fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: #e8ecef;
+        }
+
+        .tab.active {
+            background: #3498db;
+            border-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 RSA Encryption/Decryption</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('encrypt')">Mã hóa</button>
+            <button class="tab" onclick="switchTab('decrypt')">Giải mã</button>
+        </div>
+
+        <!-- ENCRYPT TAB -->
+        <div id="encrypt-tab" class="tab-content active">
+            <div class="section">
+                <h2>Nhập chuỗi cần mã hóa</h2>
+                <label for="inputText">Chuỗi (không có dấu cách):</label>
+                <input type="text" id="inputText" placeholder="Vd: MyP@ssw0rd123!#$">
+                <div class="error" id="inputError">Chuỗi không hợp lệ! Không được chứa dấu cách</div>
+            </div>
+
+            <button onclick="encryptMessage()">🔐 Mã hóa</button>
+            <button onclick="clearEncrypt()">🗑️ Xóa</button>
+
+            <div class="key-section" id="encryptResults">
+                <div class="section">
+                    <h2>Kết quả</h2>
+
+                    <label>Chuỗi mã hóa (Base64):</label>
+                    <div class="output-box" id="encryptedText"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('encryptedText')">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECRYPT TAB -->
+        <div id="decrypt-tab" class="tab-content">
+            <div class="section">
+                <h2>Giải mã</h2>
+
+                <label for="encryptedInput">Chuỗi mã hóa (Base64):</label>
+                <textarea id="encryptedInput" placeholder="Nhập chuỗi đã mã hóa..."></textarea>
+
+                <label for="privateKeyInput" style="margin-top: 15px;">Private Key:</label>
+                <textarea id="privateKeyInput" placeholder="Nhập private key..."></textarea>
+                <div class="error" id="decryptError">Vui lòng nhập đầy đủ chuỗi mã hóa và private key</div>
+            </div>
+
+            <button onclick="decryptMessage()">🔓 Giải mã</button>
+            <button onclick="clearDecrypt()">🗑️ Xóa</button>
+
+            <div class="key-section" id="decryptResults">
+                <div class="section">
+                    <h2>Kết quả giải mã</h2>
+                    <div class="output-box success" id="decryptedText"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('decryptedText')">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <script src="rsa-crypto.js?v=2"></script>
+    <script>
+        function switchTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+            if (tab === 'encrypt') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('encrypt-tab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('decrypt-tab').classList.add('active');
+            }
+        }
+
+        function validateInput(text) {
+            // Check if empty
+            if (!text) return false;
+
+            // Allow any characters except whitespace
+            const validPattern = /^\S+$/;
+            return validPattern.test(text);
+        }
+
+        function encryptMessage() {
+            const inputText = document.getElementById('inputText').value;
+            const errorElement = document.getElementById('inputError');
+
+            // Validate input
+            if (!validateInput(inputText)) {
+                errorElement.classList.add('show');
+                document.getElementById('encryptResults').classList.remove('show');
+                return;
+            }
+
+            errorElement.classList.remove('show');
+
+            // Encrypt using fixed public key
+            const encrypted = RSACrypto.encrypt(inputText);
+
+            if (!encrypted) {
+                alert('Lỗi khi mã hóa! Vui lòng thử lại.');
+                return;
+            }
+
+            // Display results
+            document.getElementById('encryptedText').textContent = encrypted;
+            document.getElementById('encryptResults').classList.add('show');
+        }
+
+        function decryptMessage() {
+            const encryptedInput = document.getElementById('encryptedInput').value.trim();
+            const privateKeyInput = document.getElementById('privateKeyInput').value.trim();
+            const errorElement = document.getElementById('decryptError');
+
+            // Validate inputs
+            if (!encryptedInput || !privateKeyInput) {
+                errorElement.classList.add('show');
+                document.getElementById('decryptResults').classList.remove('show');
+                return;
+            }
+
+            errorElement.classList.remove('show');
+
+            try {
+                // Decrypt the message
+                const decrypt = new JSEncrypt();
+                decrypt.setPrivateKey(privateKeyInput);
+                const decrypted = decrypt.decrypt(encryptedInput);
+
+                if (!decrypted) {
+                    alert('Giải mã thất bại! Kiểm tra lại chuỗi mã hóa và private key.');
+                    return;
+                }
+
+                // Display result
+                document.getElementById('decryptedText').textContent = decrypted;
+                document.getElementById('decryptResults').classList.add('show');
+            } catch (error) {
+                alert('Lỗi khi giải mã: ' + error.message);
+            }
+        }
+
+        function clearEncrypt() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('inputError').classList.remove('show');
+            document.getElementById('encryptResults').classList.remove('show');
+            document.getElementById('encryptedText').textContent = '';
+        }
+
+        function clearDecrypt() {
+            document.getElementById('encryptedInput').value = '';
+            document.getElementById('privateKeyInput').value = '';
+            document.getElementById('decryptError').classList.remove('show');
+            document.getElementById('decryptResults').classList.remove('show');
+            document.getElementById('decryptedText').textContent = '';
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Đã copy vào clipboard!');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        // Allow Enter key to trigger encryption
+        document.getElementById('inputText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                encryptMessage();
+            }
+        });
+    </script>
+</body>
+</html>

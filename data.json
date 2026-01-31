@@ -5,7 +5,8 @@
         "username": "nguyentruongg023@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": "aE/obAtyyi7LoIHZZcM15gsoEuDTARZ00CYY939QvadKCR/NvDhLZfc4DXzx3ZywM6JfGN/e1iUnvu54f/Pg2hxw3V3dlfCfHYru47yGk735DNnm1LQBHJjxl/orPfxgyc+8tGFDqNaFXFtSzSEXLYjx3lwb3w8dlqNAuGJCI2sDAjRDvRxMXZVTv1GL6kyeFK7QfsqbAB5/FJKzzZjzeR3dn8R1eMd6wz8Jp17kMOs/1Tr15A9PVqvuOixifefsHKBdQgAMPRK/gheJE4m6HwQCpeUkbZcaylj2dLaFgHpFM7bfY6jZd2sCCzbiIpLCHPU4fyL56MSSQUU3BrvbZA=="
     },
     "mogden87@gkorean.com 28/02/2026":{
         "secret" : "BCRLDD6EED3S6W5S3BGMYP7DL7LBT5GL",
@@ -13,7 +14,8 @@
         "username": "mogden87@gkorean.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "maiyeulhas@gmail.com":{
         "secret" : "3U32IQGIXX6FG23BKAU3X4M4SPURR6ZS",
@@ -21,7 +23,8 @@
         "username": "maiyeulhas@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "dantruongzzz@tempmail.id.vn":{
         "secret" : "EJ6K2Z7UMLYEHV3BTIG4QT7M5W4ZZ6JU",
@@ -29,7 +32,8 @@
         "username": "dantruongzzz@tempmail.id.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "dtruong333@mmocommunity.io.vn":{
         "secret" : "DZC45N3SRPCXGDHGB3LABIKQQSBPP5ND",
@@ -37,7 +41,8 @@
         "username": "dtruong333@mmocommunity.io.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": true
+        "hidden": true,
+        "password": ""
     },
     "predator.shen2024@gmail.com" : {
         "secret" : "MCDQEKVTEUZRYZNOT34OGQVVD3R37LWX",
@@ -45,7 +50,8 @@
         "username": "predator.shen2024@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": true
+        "hidden": true,
+        "password": ""
     },
     "3r2wd42t3e@tempmail.id.vn" : {
         "secret" : "XETGDIZOX5EQLO43LBFCN5GYYQDLQF6J",
@@ -53,7 +59,8 @@
         "username": "3r2wd42t3e@tempmail.id.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "dantruong.hungyen@gmail.com": {
         "secret" : "LHUDOUVEKLQDEPMGJX3AR5HHVLI5WPG2",
@@ -61,7 +68,8 @@
         "username": "dantruong.hungyen@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "Nguyenducduy2612@icloud.com" : {
         "secret": "MXGEFC7A5IKJ2GSH",
@@ -69,7 +77,8 @@
         "username": "Nguyenducduy2612@icloud.com",
         "group": "Github",
         "url": "https://github.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     },
     "Mingduc1608" :{
         "secret" : "PDNDBVGAAHY26ZSF",
@@ -77,6 +86,7 @@
         "username": "Mingduc1608",
         "group": "Github",
         "url": "https://github.com/",
-        "hidden": false
+        "hidden": false,
+        "password": ""
     }
 }

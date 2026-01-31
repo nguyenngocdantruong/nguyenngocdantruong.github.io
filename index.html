@@ -6,13 +6,16 @@
     <title>Khong co tieu de</title>
     <link rel="icon" type="image/png" href="clown.png">
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- CryptoJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <!-- JSEncrypt for RSA -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <script src="rsa-crypto.js?v=2"></script>
     <style>
         body {
             background: #f5f7fa;
@@ -198,6 +201,134 @@
         .group-items.expanded {
             display: block;
         }
+        .btn-password {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-password:hover {
+            background: #8e44ad;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 95%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            padding: 0;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: #2c3e50;
+        }
+        .file-input-wrapper {
+            border: 2px dashed #e1e8ed;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .file-input-wrapper:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+        .file-input-wrapper label {
+            cursor: pointer;
+            color: #3498db;
+            font-weight: 600;
+        }
+        .decrypted-password {
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 15px;
+            word-break: break-all;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .decrypted-password .label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .decrypted-password .value {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .security-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .security-warning i {
+            color: #f39c12;
+        }
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -208,7 +339,7 @@
         </div>
     </div>
 
-    <script src='totp.js'></script>
+    <script src='totp.js?v=2'></script>
     <script>
         // Track which groups are expanded - load from localStorage
         const expandedGroups = new Set(JSON.parse(localStorage.getItem('expandedGroups') || '[]'));
@@ -358,7 +489,19 @@
                                 </div>
                             `;
                         }
-                        
+
+                        if (config.password) {
+                            credentialsHtml += `
+                                <div class="credential-row">
+                                    <span class="credential-label">Password</span>
+                                    <span class="credential-value">••••••••</span>
+                                    <button class="btn-password" onclick="event.stopPropagation(); showPasswordModal('${config.password.replace(/'/g, "\\'")}')">
+                                        <i class="fas fa-key"></i> Show
+                                    </button>
+                                </div>
+                            `;
+                        }
+
                         credentialsHtml += '</div>';
                     }
                     
@@ -398,7 +541,77 @@
         }
 
         document.addEventListener('DOMContentLoaded', init);
+
+        // Password modal functions
+        let currentEncryptedPassword = '';
+
+        function showPasswordModal(encryptedPassword) {
+            currentEncryptedPassword = encryptedPassword;
+            document.getElementById('decryptResult').innerHTML = '';
+            document.getElementById('privateKeyFile').value = '';
+            document.getElementById('passwordModal').classList.add('show');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('show');
+            currentEncryptedPassword = '';
+        }
+
+        function handlePrivateKeyUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const privateKey = e.target.result;
+                const decrypted = RSACrypto.decrypt(currentEncryptedPassword, privateKey);
+
+                const resultDiv = document.getElementById('decryptResult');
+                if (decrypted) {
+                    resultDiv.innerHTML = `
+                        <div class="decrypted-password">
+                            <span class="label">Mật khẩu là:</span>
+                            <span class="value">${decrypted}</span>
+                            <i class="fas fa-copy" onclick="copyToClipboard('${decrypted.replace(/'/g, "\\'")}')" style="margin-left: 10px; cursor: pointer; color: #3498db;"></i>
+                        </div>
+                        <div class="security-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Vui lòng không chia sẻ mật khẩu và khoá key cho người khác!
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<div class="error-message">Giải mã thất bại! Private key không đúng.</div>';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('passwordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePasswordModal();
+            }
+        });
     </script>
     <div id="toast" class="toast"></div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Giải mã mật khẩu</h3>
+                <button class="modal-close" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <p style="color: #7f8c8d; margin-bottom: 15px;">Upload file private key (.pem) để giải mã mật khẩu</p>
+            <div class="file-input-wrapper">
+                <input type="file" id="privateKeyFile" accept=".pem,.txt" onchange="handlePrivateKeyUpload(event)">
+                <label for="privateKeyFile">
+                    <i class="fas fa-upload" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                    Chọn file private key
+                </label>
+            </div>
+            <div id="decryptResult"></div>
+        </div>
+    </div>
 </body>
 </html>
