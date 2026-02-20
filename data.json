@@ -1,4 +1,13 @@
 {
+     "lopagac896@advarm.com 20/03/2026":{
+        "secret" : "O57YLFNDAIYFY5ZH42NWOBDA52SQSNYC",
+        "type" : "totp",
+        "username": "lopagac896@advarm.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false,
+        "password": "cCsOoBo8RpaI+59dGYVT8IqXNcwnoGkpM1OESs4DnP9Y0cAaE5ofgU24o8yX61qJVh+uyUrGaI/zdedyz7QE/BptdiPZEb0aac4ZJJwewgSf/JiZatTM2iO3shQAcfRetLlhQkO3vEum59LaO3G8qPhcRbxInUAFX6u2fF6bqqghk/XHEB5EIQfiMehWsommhTrp7FtvSvy/jkjTrXOgOSSRjee3HnKKnID1HAuNb4eUBP1GtfQMthtxodaqo4PeMFt4ifsAGzXlewA/FLHXKpE/svoTCvNqpQ7IL7AQRLYbhLJgamJcw7c8L80BCmCyQ2t3n+vIY2/ygbKaP/mgQA=="
+    },
     "nguyentruongg023@gmail.com 28/02/2026":{
         "secret" : "SV6IDUETL7S4TUWSL2SQEX4FS6VTUG6H",
         "type" : "totp",
