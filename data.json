@@ -1,70 +1,79 @@
 {
-     "lopagac896@advarm.com 20/03/2026":{
-        "secret" : "O57YLFNDAIYFY5ZH42NWOBDA52SQSNYC",
-        "type" : "totp",
+    "dantruong2023@gmail.com 27/02/2026": {
+        "secret": "YOFLUGQUCEO3N2ASI2PLD2UHJRG5BGX3",
+        "type": "totp",
+        "username": "dantruong2023@gmail.com",
+        "group": "Grok",
+        "url": "https://accounts.x.ai/",
+        "hidden": false,
+        "password": "cCsOoBo8RpaI+59dGYVT8IqXNcwnoGkpM1OESs4DnP9Y0cAaE5ofgU24o8yX61qJVh+uyUrGaI/zdedyz7QE/BptdiPZEb0aac4ZJJwewgSf/JiZatTM2iO3shQAcfRetLlhQkO3vEum59LaO3G8qPhcRbxInUAFX6u2fF6bqqghk/XHEB5EIQfiMehWsommhTrp7FtvSvy/jkjTrXOgOSSRjee3HnKKnID1HAuNb4eUBP1GtfQMthtxodaqo4PeMFt4ifsAGzXlewA/FLHXKpE/svoTCvNqpQ7IL7AQRLYbhLJgamJcw7c8L80BCmCyQ2t3n+vIY2/ygbKaP/mgQA=="
+    },
+    "lopagac896@advarm.com 20/03/2026": {
+        "secret": "O57YLFNDAIYFY5ZH42NWOBDA52SQSNYC",
+        "type": "totp",
         "username": "lopagac896@advarm.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": "cCsOoBo8RpaI+59dGYVT8IqXNcwnoGkpM1OESs4DnP9Y0cAaE5ofgU24o8yX61qJVh+uyUrGaI/zdedyz7QE/BptdiPZEb0aac4ZJJwewgSf/JiZatTM2iO3shQAcfRetLlhQkO3vEum59LaO3G8qPhcRbxInUAFX6u2fF6bqqghk/XHEB5EIQfiMehWsommhTrp7FtvSvy/jkjTrXOgOSSRjee3HnKKnID1HAuNb4eUBP1GtfQMthtxodaqo4PeMFt4ifsAGzXlewA/FLHXKpE/svoTCvNqpQ7IL7AQRLYbhLJgamJcw7c8L80BCmCyQ2t3n+vIY2/ygbKaP/mgQA=="
     },
-    "nguyentruongg023@gmail.com 28/02/2026":{
-        "secret" : "SV6IDUETL7S4TUWSL2SQEX4FS6VTUG6H",
-        "type" : "totp",
+    "nguyentruongg023@gmail.com 28/02/2026": {
+        "secret": "SV6IDUETL7S4TUWSL2SQEX4FS6VTUG6H",
+        "type": "totp",
         "username": "nguyentruongg023@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": "aE/obAtyyi7LoIHZZcM15gsoEuDTARZ00CYY939QvadKCR/NvDhLZfc4DXzx3ZywM6JfGN/e1iUnvu54f/Pg2hxw3V3dlfCfHYru47yGk735DNnm1LQBHJjxl/orPfxgyc+8tGFDqNaFXFtSzSEXLYjx3lwb3w8dlqNAuGJCI2sDAjRDvRxMXZVTv1GL6kyeFK7QfsqbAB5/FJKzzZjzeR3dn8R1eMd6wz8Jp17kMOs/1Tr15A9PVqvuOixifefsHKBdQgAMPRK/gheJE4m6HwQCpeUkbZcaylj2dLaFgHpFM7bfY6jZd2sCCzbiIpLCHPU4fyL56MSSQUU3BrvbZA=="
     },
-    "mogden87@gkorean.com 28/02/2026":{
-        "secret" : "BCRLDD6EED3S6W5S3BGMYP7DL7LBT5GL",
-        "type" : "totp",
+    "mogden87@gkorean.com 28/02/2026": {
+        "secret": "BCRLDD6EED3S6W5S3BGMYP7DL7LBT5GL",
+        "type": "totp",
         "username": "mogden87@gkorean.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": ""
     },
-    "maiyeulhas@gmail.com":{
-        "secret" : "3U32IQGIXX6FG23BKAU3X4M4SPURR6ZS",
-        "type" : "totp",
+    "maiyeulhas@gmail.com": {
+        "secret": "3U32IQGIXX6FG23BKAU3X4M4SPURR6ZS",
+        "type": "totp",
         "username": "maiyeulhas@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": ""
     },
-    "dantruongzzz@tempmail.id.vn":{
-        "secret" : "EJ6K2Z7UMLYEHV3BTIG4QT7M5W4ZZ6JU",
-        "type" : "totp",
+    "dantruongzzz@tempmail.id.vn": {
+        "secret": "EJ6K2Z7UMLYEHV3BTIG4QT7M5W4ZZ6JU",
+        "type": "totp",
         "username": "dantruongzzz@tempmail.id.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": ""
     },
-    "dtruong333@mmocommunity.io.vn":{
-        "secret" : "DZC45N3SRPCXGDHGB3LABIKQQSBPP5ND",
-        "type" : "totp",
+    "dtruong333@mmocommunity.io.vn": {
+        "secret": "DZC45N3SRPCXGDHGB3LABIKQQSBPP5ND",
+        "type": "totp",
         "username": "dtruong333@mmocommunity.io.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": true,
         "password": ""
     },
-    "predator.shen2024@gmail.com" : {
-        "secret" : "MCDQEKVTEUZRYZNOT34OGQVVD3R37LWX",
-        "type" : "totp",
+    "predator.shen2024@gmail.com": {
+        "secret": "MCDQEKVTEUZRYZNOT34OGQVVD3R37LWX",
+        "type": "totp",
         "username": "predator.shen2024@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": ""
     },
-    "3r2wd42t3e@tempmail.id.vn" : {
-        "secret" : "XETGDIZOX5EQLO43LBFCN5GYYQDLQF6J",
-        "type" : "totp",
+    "3r2wd42t3e@tempmail.id.vn": {
+        "secret": "XETGDIZOX5EQLO43LBFCN5GYYQDLQF6J",
+        "type": "totp",
         "username": "3r2wd42t3e@tempmail.id.vn",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
@@ -72,26 +81,26 @@
         "password": ""
     },
     "dantruong.hungyen@gmail.com": {
-        "secret" : "LHUDOUVEKLQDEPMGJX3AR5HHVLI5WPG2",
-        "type" : "totp",
+        "secret": "LHUDOUVEKLQDEPMGJX3AR5HHVLI5WPG2",
+        "type": "totp",
         "username": "dantruong.hungyen@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
         "password": ""
     },
-    "Nguyenducduy2612@icloud.com" : {
+    "Nguyenducduy2612@icloud.com": {
         "secret": "MXGEFC7A5IKJ2GSH",
-        "type" : "totp",
+        "type": "totp",
         "username": "Nguyenducduy2612@icloud.com",
         "group": "Github",
         "url": "https://github.com/",
         "hidden": false,
         "password": ""
     },
-    "Mingduc1608" :{
-        "secret" : "PDNDBVGAAHY26ZSF",
-        "type" : "totp",
+    "Mingduc1608": {
+        "secret": "PDNDBVGAAHY26ZSF",
+        "type": "totp",
         "username": "Mingduc1608",
         "group": "Github",
         "url": "https://github.com/",
