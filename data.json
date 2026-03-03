@@ -1,4 +1,12 @@
 {
+    "minhluong1332@gmail.com 03/04/2026": {
+        "secret": "GPYEGTSVIJ2E5OFUY7PRG5GBVNO264KE",
+        "type": "totp",
+        "username": "minhluong1332@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
     "superdev2003@gmail.com 03/04/2026": {
         "secret": "5EP2EZS3NO4D6DATB2MVXW7C6R3YCKEM",
         "type": "totp",
