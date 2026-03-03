@@ -1,4 +1,13 @@
 {
+    "toidaidot370@gmail.com 03/04/2026": {
+        "secret": "3S5QTNMZQKDZQMWCPBHMRJSWHEOFQB2M",
+        "type": "totp",
+        "username": "toidaidot370@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false,
+        "password": "QIXo9kFYZcNVz6kY4g6aOabWrpCe00DfqzWpFoFGGX73ZXfCrdda9BGMa5uxEYueA2AWn7AAvV3vhznhG3Sie6SL+/THCoDJPAKJTTJYMFT4qEDym/F/me7sfzZn1XLTc9V2N0tE4PYGOGCQD1Vfu/fo6K3U4WnrpphZ3KujTj0x/AuNBxCMr+yUb4iRYG6JcOjAxE1qQtAB8feY1eCFeOu4irESsR9LJMJM1emZ+EaBINV4BFgKJpTCOLGclWc5vHOWIwh8pB4BWVO0xswk7k5zuOertEFLET7GpqX1DakK9lMf2mgIBK+4Rbh61RW0TBAiPVW9jGhBWZOI7GLrtA=="
+    },
     "khogadetem2@gmail.com 03/04/2026": {
         "secret": "B4HMLNZIOOARL56LM3LPH65HITOLIXCI",
         "type": "totp",
