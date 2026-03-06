@@ -1,4 +1,12 @@
 {
+    "laidopshopeeroi@gmail.com 63/04/2026": {
+        "secret": "VLVZIUG7DOB4EERKLTVT3FQGLCB6TVDU",
+        "type": "totp",
+        "username": "laidopshopeeroi@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
     "dantruong2023@gmail.com 63/04/2026": {
         "secret": "3RUTQI32I7XFNXYM5ATVVKJHZNOOZ7DR",
         "type": "totp",
