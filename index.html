@@ -334,7 +334,37 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Xác thực 2 bước</h1>
-        <div id="otp-list" class="mt-4">
+        
+        <!-- Search Box -->
+        <div class="card mb-4" style="max-width: 600px; margin: 0 auto 30px auto;">
+            <div class="card-body" style="padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-search" style="color: #7f8c8d; font-size: 1.2rem;"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Nhập email hoặc username để tìm kiếm..." 
+                        style="flex: 1; border: none; outline: none; font-size: 1rem; color: #2c3e50;"
+                        autocomplete="off"
+                    >
+                    <button 
+                        id="clearButton" 
+                        onclick="clearSearch()" 
+                        style="background: none; border: none; color: #95a5a6; cursor: pointer; display: none; padding: 5px;"
+                    >
+                        <i class="fas fa-times" style="font-size: 1.2rem;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" style="text-align: center; color: #7f8c8d; padding: 40px 0;">
+            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+            <p style="font-size: 1.1rem;">Nhập email hoặc username để tìm kiếm account</p>
+        </div>
+        
+        <div id="otp-list" class="mt-4" style="display: none;">
             <!-- OTP items will be inserted here -->
         </div>
     </div>
@@ -343,6 +373,8 @@
     <script>
         // Track which groups are expanded - load from localStorage
         const expandedGroups = new Set(JSON.parse(localStorage.getItem('expandedGroups') || '[]'));
+        let allData = {};
+        let updateInterval = null;
 
         function saveExpandedState() {
             localStorage.setItem('expandedGroups', JSON.stringify([...expandedGroups]));
@@ -352,6 +384,7 @@
             try {
                 const response = await fetch('data.json');
                 const data = await response.json();
+                allData = data;
                 return data;
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -417,6 +450,19 @@
         function renderOTPList(data) {
             const otpList = document.getElementById('otp-list');
             otpList.innerHTML = '';
+
+            if (Object.keys(data).length === 0) {
+                otpList.style.display = 'none';
+                document.getElementById('searchResults').innerHTML = `
+                    <i class="fas fa-search-minus" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                    <p style="font-size: 1.1rem;">Không tìm thấy account nào</p>
+                `;
+                document.getElementById('searchResults').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('searchResults').style.display = 'none';
+            otpList.style.display = 'block';
 
             // Group items by group field
             const groups = {};
@@ -530,14 +576,72 @@
             }
         }
 
-        async function init() {
-            const data = await loadData();
-            renderOTPList(data);
+        function searchAccounts(query) {
+            if (!query || query.trim() === '') {
+                document.getElementById('otp-list').style.display = 'none';
+                document.getElementById('searchResults').innerHTML = `
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                    <p style="font-size: 1.1rem;">Nhập email hoặc username để tìm kiếm account</p>
+                `;
+                document.getElementById('searchResults').style.display = 'block';
+                
+                // Stop updating
+                if (updateInterval) {
+                    clearInterval(updateInterval);
+                    updateInterval = null;
+                }
+                return;
+            }
 
-            // Update every second
-            setInterval(() => {
-                renderOTPList(data);
+            const searchTerm = query.toLowerCase().trim();
+            const filteredData = {};
+
+            for (const [account, config] of Object.entries(allData)) {
+                const accountLower = account.toLowerCase();
+                const usernameLower = (config.username || '').toLowerCase();
+                
+                if (accountLower.includes(searchTerm) || usernameLower.includes(searchTerm)) {
+                    filteredData[account] = config;
+                }
+            }
+
+            renderOTPList(filteredData);
+
+            // Start updating every second
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+            updateInterval = setInterval(() => {
+                renderOTPList(filteredData);
             }, 1000);
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = '';
+            searchInput.focus();
+            document.getElementById('clearButton').style.display = 'none';
+            searchAccounts('');
+        }
+
+        async function init() {
+            await loadData();
+            
+            // Setup search input
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.getElementById('clearButton');
+            
+            searchInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                clearButton.style.display = value ? 'block' : 'none';
+                searchAccounts(value);
+            });
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchAccounts(e.target.value);
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', init);
