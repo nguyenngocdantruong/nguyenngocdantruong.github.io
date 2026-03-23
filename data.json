@@ -1,4 +1,12 @@
 {
+    "maylaimuashopee@gmail.com 24/04/2026": {
+        "secret": "DS2NNN6HNWTWRCJPUFBTTJRBM64CWNSI",
+        "type": "totp",
+        "username": "maylaimuashopee@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
     "linhanhnguyen725@gmail.com 12/04/2026": {
         "secret": "EGOWN4RTX2DN6ZPOS6XMXPGURYCTTQWX",
         "type": "totp",
