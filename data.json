@@ -1,4 +1,12 @@
 {
+    "dantruong.congviec@gmail.com 25/05/2026": {
+        "secret": "LX43ZPKNOHAXT3YTJM4QCYMV72H2HVP3",
+        "type": "totp",
+        "username": "dantruong.congviec@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false
+    },
     "cyt9u677@teamdev.work.gd 27/05/2026": {
         "secret": "7BMTX4OYAEXIIZIAKKYFBCG34Y6KQ2K2",
         "type": "totp",
