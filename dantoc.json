@@ -1,0 +1,20 @@
+[
+  {
+    "Code": "DanToc",
+    "CodePrivate": "1000",
+    "Name": "Dân tộc Mới 123",
+    "ParentCodePrivate": null,
+    "Status": true,
+    "GiaTri": null,
+    "UpdatedAt": "2026-01-01T00:00:00Z"
+  },
+  {
+    "Code": "DanToc",
+    "CodePrivate": "1001",
+    "Name": "Dân tộc Mới 456",
+    "ParentCodePrivate": null,
+    "Status": true,
+    "GiaTri": null,
+    "UpdatedAt": "2026-01-01T00:00:00Z"
+  }
+]
