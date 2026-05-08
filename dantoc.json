@@ -5,7 +5,7 @@
     "Name": "Dân tộc Mới 123",
     "ParentCodePrivate": null,
     "Status": true,
-    "GiaTri": null,
+    "GiaTri": 1000,
     "UpdatedAt": "2026-01-01T00:00:00Z"
   },
   {
@@ -14,7 +14,7 @@
     "Name": "Dân tộc Mới 456",
     "ParentCodePrivate": null,
     "Status": true,
-    "GiaTri": null,
+    "GiaTri": 1001,
     "UpdatedAt": "2026-01-01T00:00:00Z"
   }
 ]
