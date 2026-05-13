@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khong co tieu de</title>
+    <title>2FA Generator</title>
     <link rel="icon" type="image/png" href="clown.png">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -329,6 +329,50 @@
             text-align: center;
             margin-top: 15px;
         }
+        .support-button {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 1500;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 12px 30px rgba(22, 160, 133, 0.28);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+        .support-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(22, 160, 133, 0.34);
+            filter: brightness(1.02);
+        }
+        .support-button i {
+            font-size: 1rem;
+        }
+        .support-modal-content {
+            max-width: 420px;
+            text-align: center;
+        }
+        .support-qr {
+            width: 100%;
+            max-width: none;
+            display: block;
+            border-radius: 16px;
+            border: 1px solid #e1e8ed;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+        }
+        .support-note {
+            margin-top: 14px;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body>
@@ -373,11 +417,16 @@
     <script>
         // Track which groups are expanded - load from localStorage
         const expandedGroups = new Set(JSON.parse(localStorage.getItem('expandedGroups') || '[]'));
+        const revealedPasswords = new Set(JSON.parse(localStorage.getItem('revealedPasswords') || '[]'));
         let allData = {};
         let updateInterval = null;
 
         function saveExpandedState() {
             localStorage.setItem('expandedGroups', JSON.stringify([...expandedGroups]));
+        }
+
+        function saveRevealedPasswordsState() {
+            localStorage.setItem('revealedPasswords', JSON.stringify([...revealedPasswords]));
         }
 
         async function loadData() {
@@ -429,6 +478,74 @@
             }
         }
 
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function createPasswordValueId(account, groupName) {
+            return `password-${`${groupName}-${account}`.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}`;
+        }
+
+        function isActivePinned(config) {
+            if (!config || !config.pinned) {
+                return false;
+            }
+
+            const expired = (config.expired || '').trim();
+            if (!expired) {
+                return true;
+            }
+
+            const match = expired.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (!match) {
+                return false;
+            }
+
+            const day = Number(match[1]);
+            const month = Number(match[2]);
+            const year = Number(match[3]);
+            const expiredDate = new Date(year, month - 1, day);
+            const normalizedExpiredDate = new Date(year, month - 1, day);
+            normalizedExpiredDate.setHours(23, 59, 59, 999);
+
+            if (
+                normalizedExpiredDate.getFullYear() !== year ||
+                normalizedExpiredDate.getMonth() !== month - 1 ||
+                normalizedExpiredDate.getDate() !== day
+            ) {
+                return false;
+            }
+
+            return new Date() <= normalizedExpiredDate;
+        }
+
+        function toggleRawPassword(button, valueId) {
+            const valueElement = document.getElementById(valueId);
+            if (!valueElement) {
+                return;
+            }
+
+            const isRevealed = valueElement.dataset.revealed === 'true';
+            if (isRevealed) {
+                revealedPasswords.delete(valueId);
+                valueElement.textContent = '*************';
+                valueElement.dataset.revealed = 'false';
+                button.innerHTML = '<i class="fas fa-eye"></i>';
+            } else {
+                revealedPasswords.add(valueId);
+                valueElement.textContent = valueElement.dataset.passwordRaw || '';
+                valueElement.dataset.revealed = 'true';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            }
+
+            saveRevealedPasswordsState();
+        }
+
         function toggleGroup(groupName) {
             const groupItems = document.getElementById(`group-${groupName}`);
             const groupToggle = document.getElementById(`toggle-${groupName}`);
@@ -467,7 +584,7 @@
             // Group items by group field
             const groups = {};
             for (const [account, config] of Object.entries(data)) {
-                if (config.type === 'totp' && !config.hidden) {
+                if (config.type === 'totp' && (isActivePinned(config) || !config.hidden)) {
                     const groupName = config.group || 'Other';
                     if (!groups[groupName]) {
                         groups[groupName] = [];
@@ -485,7 +602,7 @@
                 groupHeader.innerHTML = `
                     <div class="group-title">
                         <i class="fas fa-folder"></i>
-                        ${groupName}
+                        ${escapeHtml(groupName)}
                         <span class="group-count">${items.length}</span>
                     </div>
                     <i id="toggle-${groupName}" class="fas fa-chevron-down group-toggle ${expandedGroups.has(groupName) ? 'expanded' : ''}"></i>
@@ -498,94 +615,153 @@
                 groupItemsDiv.className = `group-items ${expandedGroups.has(groupName) ? 'expanded' : ''}`;
 
                 // Render items in group
-                items.forEach(({ account, config }) => {
-                    const otp = generateOTP(config.secret);
-                    const timeRemaining = getTimeRemaining();
-                    const progress = ((30 - timeRemaining) / 30) * 100;
+                items
+                    .slice()
+                    .sort((left, right) => Number(isActivePinned(right.config)) - Number(isActivePinned(left.config)) || left.account.localeCompare(right.account))
+                    .forEach(({ account, config }) => {
+                        const otp = generateOTP(config.secret);
+                        const timeRemaining = getTimeRemaining();
+                        const progress = ((30 - timeRemaining) / 30) * 100;
 
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    const progressBarClass = timeRemaining <= 5 ? 'progress-bar danger' : 'progress-bar';
-                    
-                    const faviconUrl = config.url ? getFavicon(config.url) : '';
-                    const faviconHtml = faviconUrl ? `<img src="${faviconUrl}" class="favicon" alt="favicon">` : '<i class="fas fa-lock" style="font-size: 24px; margin-right: 12px; color: #95a5a6;"></i>';
-                    
-                    let credentialsHtml = '';
-                    if (config.username || config.url) {
-                        credentialsHtml = '<div style="padding: 0 20px 16px 20px;">';
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        const progressBarClass = timeRemaining <= 5 ? 'progress-bar danger' : 'progress-bar';
                         
-                        if (config.url) {
-                            credentialsHtml += `
-                                <div class="credential-row">
-                                    <span class="credential-label">URL</span>
-                                    <span class="credential-value">
-                                        <a href="${config.url}" target="_blank" class="btn-link">${config.url}</a>
-                                    </span>
-                                    <i class="fas fa-copy" onclick="copyToClipboard('${config.url.replace(/'/g, "\\'")}')"></i>
-                                </div>
-                            `;
+                        const faviconUrl = config.url ? getFavicon(config.url) : '';
+                        const faviconHtml = faviconUrl ? `<img src="${faviconUrl}" class="favicon" alt="favicon">` : '<i class="fas fa-lock" style="font-size: 24px; margin-right: 12px; color: #95a5a6;"></i>';
+                        
+                        let credentialsHtml = '';
+                        if (config.username || config.url) {
+                            credentialsHtml = '<div style="padding: 0 20px 16px 20px;">';
+                            
+                            if (config.url) {
+                                credentialsHtml += `
+                                    <div class="credential-row">
+                                        <span class="credential-label">URL</span>
+                                        <span class="credential-value">
+                                            <a href="${escapeHtml(config.url)}" target="_blank" class="btn-link">${escapeHtml(config.url)}</a>
+                                        </span>
+                                        <i class="fas fa-copy" onclick="copyToClipboard('${config.url.replace(/'/g, "\\'")}')"></i>
+                                    </div>
+                                `;
+                            }
+                            
+                            if (config.username) {
+                                credentialsHtml += `
+                                    <div class="credential-row">
+                                        <span class="credential-label">Username</span>
+                                        <span class="credential-value">${escapeHtml(config.username)}</span>
+                                        <i class="fas fa-copy" onclick="copyToClipboard('${config.username.replace(/'/g, "\\'")}')"></i>
+                                    </div>
+                                `;
+                            }
+
+                            if (config.password_raw) {
+                                const passwordValueId = createPasswordValueId(account, groupName);
+                                const isPasswordRevealed = revealedPasswords.has(passwordValueId);
+                                credentialsHtml += `
+                                    <div class="credential-row">
+                                        <span class="credential-label">Password</span>
+                                        <span class="credential-value" id="${passwordValueId}" data-password-raw="${escapeHtml(config.password_raw)}" data-revealed="${isPasswordRevealed ? 'true' : 'false'}">${isPasswordRevealed ? escapeHtml(config.password_raw) : '*************'}</span>
+                                        <button class="btn-password" onclick="event.stopPropagation(); toggleRawPassword(this, '${passwordValueId}')">
+                                            <i class="fas ${isPasswordRevealed ? 'fa-eye-slash' : 'fa-eye'}"></i>
+                                        </button>
+                                    </div>
+                                `;
+                            } else if (config.password) {
+                                credentialsHtml += `
+                                    <div class="credential-row">
+                                        <span class="credential-label">Password</span>
+                                        <span class="credential-value">••••••••</span>
+                                        <button class="btn-password" onclick="event.stopPropagation(); showPasswordModal('${config.password.replace(/'/g, "\\'")}')">
+                                            <i class="fas fa-eye"></i> Show
+                                        </button>
+                                    </div>
+                                `;
+                            }
+
+                            credentialsHtml += '</div>';
                         }
                         
-                        if (config.username) {
-                            credentialsHtml += `
-                                <div class="credential-row">
-                                    <span class="credential-label">Username</span>
-                                    <span class="credential-value">${config.username}</span>
-                                    <i class="fas fa-copy" onclick="copyToClipboard('${config.username.replace(/'/g, "\\'")}')"></i>
-                                </div>
-                            `;
-                        }
-
-                        if (config.password) {
-                            credentialsHtml += `
-                                <div class="credential-row">
-                                    <span class="credential-label">Password</span>
-                                    <span class="credential-value">••••••••</span>
-                                    <button class="btn-password" onclick="event.stopPropagation(); showPasswordModal('${config.password.replace(/'/g, "\\'")}')">
-                                        <i class="fas fa-key"></i> Show
-                                    </button>
-                                </div>
-                            `;
-                        }
-
-                        credentialsHtml += '</div>';
-                    }
-                    
-                    card.innerHTML = `
-                        <div class="card-header">
-                            ${faviconHtml}
-                            <h5 class="card-title">${account}</h5>
-                            <i class="fas fa-copy" onclick="copyToClipboard('${account.replace(/'/g, "\\'")}')"></i>
-                        </div>
-                        <div class="card-body">
-                            ${credentialsHtml}
-                            <div class="otp-display">
-                                ${otp}
-                                <i class="fas fa-copy" onclick="copyToClipboard('${otp}')" style="font-size: 1.5rem; margin-left: 15px;"></i>
+                        card.innerHTML = `
+                            <div class="card-header">
+                                ${faviconHtml}
+                                <h5 class="card-title">${escapeHtml(account)}</h5>
+                                <i class="fas fa-copy" onclick="copyToClipboard('${account.replace(/'/g, "\\'")}')"></i>
                             </div>
-                            <div class="progress">
-                                <div class="${progressBarClass}" role="progressbar" style="width: ${progress}%"></div>
+                            <div class="card-body">
+                                ${credentialsHtml}
+                                <div class="otp-display">
+                                    ${otp}
+                                    <i class="fas fa-copy" onclick="copyToClipboard('${otp}')" style="font-size: 1.5rem; margin-left: 15px;"></i>
+                                </div>
+                                <div class="progress">
+                                    <div class="${progressBarClass}" role="progressbar" style="width: ${progress}%"></div>
+                                </div>
+                                <p class="time-remaining">Expires in ${timeRemaining} seconds</p>
                             </div>
-                            <p class="time-remaining">Expires in ${timeRemaining} seconds</p>
-                        </div>
-                    `;
-                    groupItemsDiv.appendChild(card);
-                });
+                        `;
+                        groupItemsDiv.appendChild(card);
+                    });
 
                 otpList.appendChild(groupItemsDiv);
             }
         }
 
         function searchAccounts(query) {
-            if (!query || query.trim() === '') {
-                document.getElementById('otp-list').style.display = 'none';
-                document.getElementById('searchResults').innerHTML = `
+            const searchTerm = (query || '').trim().toLowerCase();
+            const filteredData = {};
+
+            if (!searchTerm) {
+                for (const [account, config] of Object.entries(allData)) {
+                    if (config.type === 'totp' && isActivePinned(config)) {
+                        filteredData[account] = config;
+                    }
+                }
+
+                if (Object.keys(filteredData).length === 0) {
+                    document.getElementById('otp-list').style.display = 'none';
+                    document.getElementById('searchResults').innerHTML = `
                     <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
                     <p style="font-size: 1.1rem;">Nhập email hoặc username để tìm kiếm account</p>
                 `;
+                    document.getElementById('searchResults').style.display = 'block';
+
+                    if (updateInterval) {
+                        clearInterval(updateInterval);
+                        updateInterval = null;
+                    }
+                    return;
+                }
+
+                renderOTPList(filteredData);
+
+                if (updateInterval) {
+                    clearInterval(updateInterval);
+                }
+                updateInterval = setInterval(() => {
+                    renderOTPList(filteredData);
+                }, 1000);
+                return;
+            }
+
+            for (const [account, config] of Object.entries(allData)) {
+                const accountLower = account.toLowerCase();
+                const usernameLower = (config.username || '').toLowerCase();
+
+                if ((config.type === 'totp' && (isActivePinned(config) || !config.hidden)) && (accountLower.includes(searchTerm) || usernameLower.includes(searchTerm))) {
+                    filteredData[account] = config;
+                }
+            }
+
+            if (Object.keys(filteredData).length === 0) {
+                document.getElementById('otp-list').style.display = 'none';
+                document.getElementById('searchResults').innerHTML = `
+                    <i class="fas fa-search-minus" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                    <p style="font-size: 1.1rem;">Không tìm thấy account nào</p>
+                `;
                 document.getElementById('searchResults').style.display = 'block';
-                
-                // Stop updating
+
                 if (updateInterval) {
                     clearInterval(updateInterval);
                     updateInterval = null;
@@ -593,21 +769,8 @@
                 return;
             }
 
-            const searchTerm = query.toLowerCase().trim();
-            const filteredData = {};
-
-            for (const [account, config] of Object.entries(allData)) {
-                const accountLower = account.toLowerCase();
-                const usernameLower = (config.username || '').toLowerCase();
-                
-                if (accountLower.includes(searchTerm) || usernameLower.includes(searchTerm)) {
-                    filteredData[account] = config;
-                }
-            }
-
             renderOTPList(filteredData);
 
-            // Start updating every second
             if (updateInterval) {
                 clearInterval(updateInterval);
             }
@@ -642,6 +805,8 @@
                     searchAccounts(e.target.value);
                 }
             });
+
+            searchAccounts('');
         }
 
         document.addEventListener('DOMContentLoaded', init);
@@ -661,6 +826,18 @@
             currentEncryptedPassword = '';
         }
 
+        function openSupportModal() {
+            document.getElementById('supportModal').classList.add('show');
+        }
+
+        function closeSupportModal(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
+            }
+
+            document.getElementById('supportModal').classList.remove('show');
+        }
+
         function handlePrivateKeyUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -675,7 +852,7 @@
                     resultDiv.innerHTML = `
                         <div class="decrypted-password">
                             <span class="label">Mật khẩu là:</span>
-                            <span class="value">${decrypted}</span>
+                            <span class="value">${escapeHtml(decrypted)}</span>
                             <i class="fas fa-copy" onclick="copyToClipboard('${decrypted.replace(/'/g, "\\'")}')" style="margin-left: 10px; cursor: pointer; color: #3498db;"></i>
                         </div>
                         <div class="security-warning">
@@ -690,14 +867,32 @@
             reader.readAsText(file);
         }
 
-        // Close modal when clicking outside
-        document.getElementById('passwordModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePasswordModal();
-            }
-        });
+        var passwordModal = document.getElementById('passwordModal');
+        if(passwordModal) {
+            passwordModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePasswordModal();
+                }
+            });
+        }
     </script>
     <div id="toast" class="toast"></div>
+
+    <button class="support-button" onclick="openSupportModal()">
+        <i class="fas fa-heart"></i>
+        <span>Ủng hộ</span>
+    </button>
+
+    <div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
+        <div class="modal-content support-modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title">Ủng hộ tác giả</h3>
+                <button class="modal-close" onclick="closeSupportModal()">&times;</button>
+            </div>
+            <img class="support-qr" src="https://img.vietqr.io/image/MB-40423456789-print.png" alt="QR chuyển khoản ủng hộ">
+            <p class="support-note">Ủng hộ tác giả nếu bạn thấy tiện ích này hữu ích.</p>
+        </div>
+    </div>
 
     <!-- Password Modal -->
     <div id="passwordModal" class="modal-overlay">
