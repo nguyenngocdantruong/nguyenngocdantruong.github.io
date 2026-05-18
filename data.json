@@ -6,7 +6,7 @@
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
         "hidden": false,
-        "pinned" : true,
+        "pinned" : false,
         "password_raw" : "dantruongskibidi@",
         "expired" : "12/06/2026"
     },

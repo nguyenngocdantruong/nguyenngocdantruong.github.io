@@ -152,6 +152,57 @@
         .toast.show {
             opacity: 1;
         }
+        .notice-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+            padding: 14px 20px 14px 16px;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 9999;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            max-width: 90vw;
+            width: 560px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .notice-toast.show {
+            opacity: 1;
+        }
+        .notice-toast i {
+            color: #f39c12;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .notice-toast a {
+            color: #0056b3;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        .notice-toast-close {
+            background: none;
+            border: none;
+            color: #856404;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0;
+            margin-left: auto;
+            flex-shrink: 0;
+            line-height: 1;
+            opacity: 0.7;
+        }
+        .notice-toast-close:hover {
+            opacity: 1;
+        }
         .group-header {
             background: #ffffff;
             border: 1px solid #e1e8ed;
@@ -811,6 +862,12 @@
 
         document.addEventListener('DOMContentLoaded', init);
 
+        // Show notice toast on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const noticeToast = document.getElementById('noticeToast');
+            setTimeout(() => noticeToast.classList.add('show'), 500);
+        });
+
         // Password modal functions
         let currentEncryptedPassword = '';
 
@@ -877,6 +934,13 @@
         }
     </script>
     <div id="toast" class="toast"></div>
+
+    <!-- Notice Toast -->
+    <div id="noticeToast" class="notice-toast">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Trang này sẽ ngừng hoạt động sau <strong>12/06/2026</strong>. Vui lòng truy cập trang mới <a href="https://app.dev8084.io.vn/" target="_blank">https://app.dev8084.io.vn/</a> để tiếp tục sử dụng. Xin cảm ơn!</span>
+        <button class="notice-toast-close" onclick="document.getElementById('noticeToast').classList.remove('show')" title="Đóng">&times;</button>
+    </div>
 
     <button class="support-button" onclick="openSupportModal()">
         <i class="fas fa-heart"></i>
