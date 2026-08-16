@@ -1,4 +1,15 @@
 {
+    "dinhanhungyen@gmail.com": {
+        "secret": "BQPWFSUBMKQZVOGFHJCNRTKGYTEVQG6P",
+        "type": "totp",
+        "username": "dinhanhungyen@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false,
+        "pinned" : true,
+        "password_raw" : "dungnoichoaibiet",
+        "expired" : "20/09/2026"
+    },
     "uocgibim02@gmail.com 12/06/2026": {
         "secret": "OSV2A3XQJUA3AA77IJWCD3OGOH3WSPCM",
         "type": "totp",
