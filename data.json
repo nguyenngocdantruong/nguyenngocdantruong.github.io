@@ -1,12 +1,23 @@
 {
+    "nguyendantruong671@gmail.com - 11/10/2026": {
+        "secret": "WTT5ZWWRVCKTAWUOJU6M3AOG3EHW2565",
+        "type": "totp",
+        "username": "nguyendantruong671@gmail.com",
+        "group": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "hidden": false,
+        "pinned" : true,
+        "password" : "SJ/TnogD+7SSS42iOrhpXnJ9x8dC04WPTMhOYRB0XpiKenZrdPndVx3A9YzA21dg82sIGYR+arOS+dAx4I6+N1kfn23k/9R6rnL66FLFcMpLgpCXh6OjgNLKKPssILCwHSZkTlYi5gKx54IExTQBpAL2AO8bGhYtK2ekknXy1T0=",
+        "expired" : "20/09/2026"
+    },
     "dinhanhungyen@gmail.com": {
         "secret": "BQPWFSUBMKQZVOGFHJCNRTKGYTEVQG6P",
         "type": "totp",
         "username": "dinhanhungyen@gmail.com",
         "group": "ChatGPT",
         "url": "https://chatgpt.com/",
-        "hidden": false,
-        "pinned" : true,
+        "hidden": true,
+        "pinned" : false,
         "password_raw" : "dungnoichoaibiet",
         "expired" : "20/09/2026"
     },

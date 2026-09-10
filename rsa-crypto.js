@@ -5,15 +5,13 @@
  */
 
 const RSACrypto = {
+    version : '11092026',
     // Fixed public key for encryption
     publicKey: `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApEiSR3pZclT+uWQGAzPp
-cDXlQ0ChCsfvfLqfvi//efkx5dIPECVOErZpxe7Ch0Z1e+fXwxUInzIaTEK5V9/J
-BUJJycGQFkgUokHeEmyFLoz0UiRNtG5PG/0Zfzw3NWeW1C2eOA4xtHGeAiKeT1hS
-/nEdTNQdJiOvHV/iRKFr2GI7itJixEmG97d/30dhP69ODh5W9pHz1cepBQk9Zy/u
-kavRqkRb5OHzBQFqD/9mGQs8hp/dVjE61kwACvZq74RqRAN0hOGao7+9KvmVuPMz
-AmQBILTgezv0XayNbLk8pxYC/s9gFF+VsW7FoFmz/YQhkgiwohNSSTSoPYheaD/5
-ewIDAQAB
+MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgE4IOfB4KDPvHbNix8M7creGdaZL
+vgaup6LHQ7hX+HhCMnszbnvhoqjdp/MU9bQBLHSrRvAV/XbdKmvBBetb5y4gjurT
+ST081K/6kBOMO5HsuYbHnLsoDVY05BPLkICdCcpG8pKr9Y7UAf+NlWY6zRmaBY2G
+NDEQI1QtHEi+jbJbAgMBAAE=
 -----END PUBLIC KEY-----`,
 
     /**
